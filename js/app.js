@@ -21,6 +21,10 @@ Enemy.prototype.update = function(dt) {
     // all computers.
 };
 
+Enemy.prototype.spawn = function(){
+
+}
+
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -87,6 +91,7 @@ var player = new Player();
 
 for (var i = 0; i < 5; i++) {
   var enemy = new Enemy();
+  enemy.x = Math.Random()
   allEnemies.push(enemy);
 }
 
