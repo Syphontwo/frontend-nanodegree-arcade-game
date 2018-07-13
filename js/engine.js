@@ -38,6 +38,12 @@ var Engine = (function(global) {
          * would be the same for everyone (regardless of how fast their
          * computer is) - hurray time!
          */
+         //when paused, don't do anything
+         if (paused){
+           win.requestAnimationFrame(main);
+           return;
+         }
+
         var now = Date.now(),
             dt = (now - lastTime) / 1000.0;
 
@@ -55,7 +61,7 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        win.requestAnimationFrame(main);
+         win.requestAnimationFrame(main);
     }
 
     /* This function does some initial setup that should only occur once,

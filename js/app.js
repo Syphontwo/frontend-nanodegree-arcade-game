@@ -1,7 +1,7 @@
 var numRows = 6;
-var numCols = 5;
-var playAreaWidth = 505;
-var playAreaHeight = 606 - 108;
+var numCols = 5
+var allEnemies = [];
+var paused = false;
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -11,6 +11,12 @@ var Enemy = function() {
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
+    //Sets up initial positions.
+    //Don't want the board to be free of anamies at the start
+    this.row = (Math.floor(Math.random() * (3 - 0)) + 0) + 1 //for collision
+    this.x = Math.floor(Math.random() * (505 - 0)) + 0;
+    this.y = 60  + (83 * (this.row - 1));
+    this.speedPerTick = (Math.floor(Math.random() * (400 - 150)) + 150);
 };
 
 // Update the enemy's position, required method for game
@@ -19,10 +25,19 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+
+    this.x += this.speedPerTick * dt;
+    if (this.x > 560){
+      this.spawn();
+    }
 };
 
+// Setup this enemy as a new one to come across the screen
 Enemy.prototype.spawn = function(){
-
+  this.row = (Math.floor(Math.random() * (3 - 0)) + 0) + 1
+  this.x = -1 * (Math.floor(Math.random() * (500 - 83)) + 83);
+  this.y = 60  + (83 * (this.row - 1));
+  this.speedPerTick = (Math.floor(Math.random() * (400 - 150)) + 150);
 }
 
 // Draw the enemy on the screen, required method for game
@@ -33,7 +48,7 @@ Enemy.prototype.render = function() {
 var Player = function() {
     this.sprite = 'images/char-horn-girl.png';
     this.x = 3; //column to show sprite on
-    this.y = 4; //row to show prite on
+    this.y = 5; //row to show prite on
     this.playAreaWidth = 505; //movable pixels wide
     //added the math to show its the canvas height minus
     this.playAreaHeight = 606 - 108; //movable pixels tall
@@ -49,12 +64,27 @@ var Player = function() {
         return this.y * (this.playAreaHeight / numRows) + this.yOffset; }
 };
 
-Player.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
-    // which will ensure the game runs at the same speed for
-    // all computers.
+Player.prototype.update = function() {
 
-    // currently this is not required to do anything
+  // check for collision
+  allEnemies.forEach(function(enemy){
+    if (enemy.row == this.y && //enemy and player on same row
+      //emeny right is right of player left
+        enemy.x + 98 >= this.xPixles() + 16 &&
+      //enemy left is left of player right
+        enemy.x + 1 <= this.xPixles() + 85){
+          var gameOverScreen = document.getElementById('gameOver');
+          gameOverScreen.style.display = "block";
+          paused = true;
+    }
+  }, this);
+
+  //check for win
+  if (this.y == 0){
+    var gameOverScreen = document.getElementById('gameSuccess');
+    gameOverScreen.style.display = "block";
+    paused = true;
+  }
 };
 
 // Draw the player on the screen, required method for game
@@ -78,6 +108,17 @@ Player.prototype.handleInput = function(input) {
       case 'down':
         this.y = Math.min(numRows - 1, this.y + 1);
         break;
+      case 'enter':
+        if (paused){
+          var gameOverScreen = document.getElementById('gameOver');
+          gameOverScreen.style.display = "none";
+          var gameOverScreen = document.getElementById('gameSuccess');
+          gameOverScreen.style.display = "none";
+          this.x = 3;
+          this.y = 5;
+          paused = false;
+        }
+        break;
     }
 };
 
@@ -86,12 +127,10 @@ Player.prototype.handleInput = function(input) {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-var allEnemies = [];
 var player = new Player();
 
 for (var i = 0; i < 5; i++) {
   var enemy = new Enemy();
-  enemy.x = Math.Random()
   allEnemies.push(enemy);
 }
 
@@ -102,7 +141,8 @@ document.addEventListener('keyup', function(e) {
         37: 'left',
         38: 'up',
         39: 'right',
-        40: 'down'
+        40: 'down',
+        13: 'enter'
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
