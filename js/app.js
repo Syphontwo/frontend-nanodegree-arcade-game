@@ -1,5 +1,5 @@
 var numRows = 6;
-var numCols = 5
+var numCols = 5;
 var allEnemies = [];
 var paused = false;
 
@@ -34,7 +34,7 @@ Enemy.prototype.update = function(dt) {
 
 // Setup this enemy as a new one to come across the screen
 Enemy.prototype.spawn = function(){
-  this.row = (Math.floor(Math.random() * (3 - 0)) + 0) + 1
+  this.row = (Math.floor(Math.random() * (3 - 0)) + 0) + 1;
   this.x = -1 * (Math.floor(Math.random() * (500 - 83)) + 83);
   this.y = 60  + (83 * (this.row - 1));
   this.speedPerTick = (Math.floor(Math.random() * (400 - 150)) + 150);
@@ -109,11 +109,13 @@ Player.prototype.handleInput = function(input) {
         this.y = Math.min(numRows - 1, this.y + 1);
         break;
       case 'enter':
+        //enter key should only have an interaction if a modal window is up
         if (paused){
           var gameOverScreen = document.getElementById('gameOver');
           gameOverScreen.style.display = "none";
           var gameOverScreen = document.getElementById('gameSuccess');
           gameOverScreen.style.display = "none";
+          //reset the player position
           this.x = 3;
           this.y = 5;
           paused = false;
