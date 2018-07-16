@@ -22,6 +22,9 @@ Students should use this [rubric](https://review.udacity.com/#!/projects/2696458
 
 For detailed instructions on how to get started, check out this [guide](https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true).
 
+## Sources
+Most of the engine, the images, and resources.js came from the repo that this one was forked from.  Basic code for the modal came from w3schools.  See code comment for more specific details.
+
 ### No contributions accepted.
 
 Project is still in active development.  In this stage, it is simply the bare minimum requirement for the project.  Once active development has ended, contributions will be reconsidered.  Feel free to fork and use this code as you wish in the meantime.
